@@ -3,7 +3,10 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.jetbrainsKotlinKapt)
     alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.daggerHiltAndroid)
+    id ("kotlin-parcelize")
+//    alias(libs.plugins.daggerHiltAndroid)
+    id ("dagger.hilt.android.plugin")
+
 }
 
 android {
@@ -33,11 +36,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -48,6 +51,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/gradle/incremental.annotation.processors"
         }
     }
 }
@@ -70,15 +74,27 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.navigation.compose)
+
+
+    implementation(libs.accompanist.navigation.animation)
+    implementation(libs.accompanist.navigation.material)
+
+    
     implementation(libs.androidx.compose.preview)
 
     implementation(libs.coil.compose)
 
 
     implementation(libs.androidx.icons)
+    implementation(libs.androidx.compose.foundation)
 
-    implementation(libs.dagger.hilt.android)
-    implementation(libs.dagger.hilt.android.compiler)
+
+    //Hilt
+    implementation (libs.hilt.android)
+    kapt (libs.hilt.android.compiler)
+    implementation (libs.androidx.hilt.navigation.compose)
 
     implementation(libs.kotlinx.coroutines.core)
 
@@ -94,7 +110,11 @@ dependencies {
     implementation(libs.com.json)
 
 
+    implementation(libs.lottie.compose)
 
+
+
+    implementation (libs.androidx.material3.window.size)
 
 
 }

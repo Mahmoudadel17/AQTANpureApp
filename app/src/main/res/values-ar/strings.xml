@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AQTAN</string>
     <string name="purchase_online">Purchase Online !!</string>
@@ -17,17 +18,17 @@
     <string name="continue_shopping">CONTINUE SHOPPING</string>
     <string name="your_order_will_be_delivered_soon">Your order will be delivered soon.</string>
     <string name="thank_you_for_choosing_our_app">Thank you for choosing our app!</string>
-    <string name="general_settings">General Settings</string>
-    <string name="about">About</string>
-    <string name="account_settings">Account Settings</string>
+    <string name="general_settings">الإعدادات العامة</string>
+    <string name="about">حول</string>
+    <string name="account_settings">إعدادات الحساب</string>
     <string name="en" translatable="false">English</string>
     <string name="ar" translatable="false">العربية</string>
-    <string name="change_language">Change Language</string>
-    <string name="language">Language</string>
-    <string name="dark_mode">Dark Mode</string>
-    <string name="terms_conditions"><![CDATA[Terms & Conditions]]></string>
-    <string name="license">License</string>
-    <string name="rate_this_app">Rate this app</string>
-    <string name="share_this_app">Share this app</string>
+    <string name="change_language">تغيير اللغة</string>
+    <string name="language">اللغة</string>
+    <string name="dark_mode">الوضع الداكن</string>
+    <string name="terms_conditions">الشروط والأحكام</string>
+    <string name="license">التراخيص</string>
+    <string name="rate_this_app">قيم هذا التطبيق</string>
+    <string name="share_this_app">شارك هذا التطبيق</string>
     <string name="add_to_cart">ADD TO CART</string>
 </resources>

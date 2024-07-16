@@ -1,4 +1,14 @@
 package com.example.aqtan.presentation.navigation
 
-class Screens {
+
+
+
+sealed class Screens(val route:String){
+    data object Intro : Screens(route = "intro")
+    data object Home : Screens(route = "home")
+    data object ProductDetails : Screens(route = "productDetails")
+    data object Search : Screens(route = "search")
+    data object Success : Screens(route = "success")
+    data object Checkout : Screens(route = "checkout")
+
 }
