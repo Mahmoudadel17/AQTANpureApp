@@ -34,9 +34,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.aqtan.data.products
+import com.example.aqtan.data.tabItems
 import com.example.aqtan.presentation.components.ProductsGridList
 import com.example.aqtan.presentation.components.SearchAppBar
-import com.example.aqtan.presentation.components.products
 import com.example.aqtan.presentation.navigation.Screens
 import com.example.aqtan.ui.theme.RedComponentColor3
 import com.example.aqtan.ui.theme.TextDark
@@ -46,28 +47,7 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
-data class Tab(val id:Int,val name:String)
 
-
-val tabItems = listOf(
-    Tab(-1,"all"),
-    Tab(1,  "T-shirts",),
-    Tab(2, "Crop tops",),
-    Tab(3,  "T-shirts",),
-    Tab(4, "Crop tops",),
-    Tab(5,  "T-shirts",),
-    Tab(6, "Crop tops",),
-    Tab(7,  "T-shirts",),
-    Tab(8, "Crop tops",),
-    Tab(9,  "T-shirts",),
-    Tab(10, "Crop tops",),
-    Tab(11, "Crop tops",),
-    Tab(12, "Crop tops",),
-
-
-
-
-)
 @OptIn(ExperimentalPagerApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun ShopScreen(navController: NavHostController){

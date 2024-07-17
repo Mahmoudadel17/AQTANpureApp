@@ -5,5 +5,6 @@ data class ProfileState(
     val isBottomSheetShow:Boolean = false,
     val isArabic:Boolean = false,
     val isRtlDirection:Boolean = false,
+    val languageCode:Int = -1
 
 )
