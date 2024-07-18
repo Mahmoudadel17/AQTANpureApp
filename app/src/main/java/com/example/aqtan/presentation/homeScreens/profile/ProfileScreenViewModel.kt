@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aqtan.data.Constants
 import com.example.aqtan.data.remote.dto.Country
-import com.example.aqtan.data.remote.dto.HomeLists
 import com.example.aqtan.domain.SharedPreferences
 import com.example.aqtan.domain.repository.ApiServicesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,8 +17,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import java.util.Locale
+import javax.inject.Inject
 
 
 @HiltViewModel

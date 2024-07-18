@@ -54,7 +54,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.aqtan.R
-import com.example.aqtan.ui.theme.ComponentBackgroundDark
 import com.example.aqtan.ui.theme.ComponentBackgroundDark2
 import com.example.aqtan.ui.theme.RedComponentColor
 import com.example.aqtan.ui.theme.brush2
