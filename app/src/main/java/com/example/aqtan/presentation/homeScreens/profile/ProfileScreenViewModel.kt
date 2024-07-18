@@ -7,16 +7,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.aqtan.data.Constants
+import com.example.aqtan.data.remote.dto.Country
+import com.example.aqtan.data.remote.dto.HomeLists
 import com.example.aqtan.domain.SharedPreferences
+import com.example.aqtan.domain.repository.ApiServicesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.util.Locale
 
 
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
-    private val pref: SharedPreferences
+    private val pref: SharedPreferences,
+    private val repo:ApiServicesRepository
 ): ViewModel() {
 
     private var _state by mutableStateOf(
@@ -28,7 +37,13 @@ class ProfileScreenViewModel @Inject constructor(
 
 
 
+    private val _countriesList = MutableStateFlow(emptyList<Country>())
+    val countriesList: StateFlow<List<Country>> = _countriesList
+
+
     init {
+        getCategoriesList()
+
         val codeIsArabic =  pref.getSharedPreferences(Constants.LANGUAGE,"") == Constants.LANGUAGE_AR_CODE
         _state = _state.copy(
             isDark = pref.getBooleanSharedPreferences(Constants.MODE, true),
@@ -36,6 +51,20 @@ class ProfileScreenViewModel @Inject constructor(
             isRtlDirection = codeIsArabic,
         )
     }
+
+
+
+
+
+
+    private fun getCategoriesList(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.getAllCountries().collect{
+                _countriesList.value =  it
+            }
+        }
+    }
+
 
     fun isFirstTimeOpenApp():Boolean{
         // check if this first time to open application or not
