@@ -31,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +42,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.aqtan.R
-import com.example.aqtan.data.countries
 import com.example.aqtan.data.remote.dto.Country
 import com.example.aqtan.presentation.components.CircleIconBackground
 import com.example.aqtan.presentation.components.CountryImage
@@ -57,6 +57,7 @@ fun ProfileScreen(profileViewModel: ProfileScreenViewModel) {
     // Now can access resources using the context
     val resources = context.resources
 
+    val countriesList = profileViewModel.countriesList.collectAsState().value
 
 
     val localeOptions = mapOf(
@@ -67,7 +68,8 @@ fun ProfileScreen(profileViewModel: ProfileScreenViewModel) {
     LazyColumn(
         Modifier
             .fillMaxSize()
-            .padding(start = 12.dp)){
+            .padding(start = 12.dp)
+    ){
 
 
         item {
@@ -170,6 +172,7 @@ fun ProfileScreen(profileViewModel: ProfileScreenViewModel) {
                     content = {
                         CountryBottomSheetContent(
                             countryCode = state.countryCode,
+                            countriesList = countriesList,
                             onDismissRequest = { profileViewModel.onDismissCountryRequest() },
                             onSelectCountry = {selectionCountry->profileViewModel.onSelectCountry(selectionCountry)}
                         )
@@ -332,6 +335,7 @@ fun LanguageBottomSheetContent(
 @Composable
 fun CountryBottomSheetContent(
     countryCode:Int,
+    countriesList:List<Country>,
     onDismissRequest: () -> Unit,
     onSelectCountry: (Int) -> Unit,
 ) {
@@ -361,12 +365,12 @@ fun CountryBottomSheetContent(
         )
 
         LazyColumn {
-            itemsIndexed(countries){index,country->
+            itemsIndexed(countriesList){index,country->
                 Row{
                     CountryCard(country = country, isSelected = countryCode == country.id, onDismissRequest = { onDismissRequest() }) {
                         onSelectCountry(it)
                     }
-                    if (index != countries.size-1) {
+                    if (index != countriesList.size-1) {
                         HorizontalDivider(
                             modifier = Modifier
                                 .fillMaxWidth()

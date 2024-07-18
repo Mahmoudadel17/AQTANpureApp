@@ -31,4 +31,8 @@ class ApiServicesRepositoryImpl  @Inject constructor(
     override suspend fun getProductsListOfCategory(id: Int): StateFlow<List<Product>> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun searchForProduct(query: String): StateFlow<List<Product>> {
+        TODO("Not yet implemented")
+    }
 }

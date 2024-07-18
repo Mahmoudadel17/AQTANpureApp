@@ -11,10 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.aqtan.presentation.components.ProductsGridList
 import com.example.aqtan.presentation.components.SearchAppBar
 
 @Composable
-fun SearchScreen( navController: NavHostController) {
+fun SearchScreen(
+    navController: NavHostController,
+    selectedCountryCode:Int
+) {
     val searchScreenViewModel: SearchScreenViewModel = hiltViewModel()
 
     val searchQuery = searchScreenViewModel.searchQuery.collectAsState().value
@@ -33,6 +37,10 @@ fun SearchScreen( navController: NavHostController) {
                 onSearchClicked = {searchScreenViewModel.onIconSearchClick()},
             )
         }
-        // MoviesGridList(searchedItems,navController)
+        ProductsGridList(
+            products = searchedItems,
+            selectedCountryCode = selectedCountryCode,
+            navController = navController
+        )
     }
 }

@@ -62,6 +62,7 @@ fun AppNavigation(
                     ProductDetailsScreen(
                         product = it,
                         navController = navController,
+                        selectedCountryCode = profileViewModel.state.value.countryCode
                     )
                 }
             }
@@ -80,12 +81,20 @@ fun AppNavigation(
                     newList = homeLists.find {currList-> currList.id == listID }
                 }
                 newList?.let {homeList->
-                    AllProductsScreen(navController = navController, allProducts = homeList)
+                    AllProductsScreen(
+                        navController = navController,
+                        allProducts = homeList,
+                        selectedCountryCode = profileViewModel.state.value.countryCode ,
+                        )
+
                 }
 
             }
             composable(route = Screens.Search.route) {
-                SearchScreen(navController = navController)
+                SearchScreen(
+                    navController = navController,
+                    selectedCountryCode = profileViewModel.state.value.countryCode ,
+                    )
             }
 
 
@@ -118,7 +127,11 @@ fun BottomNavigation(
                 HomeScreen(navController = appNavController,mainViewModel = mainViewModel)
             }
             composable(route = NavigationScreen.Shop.route) {
-                ShopScreen(appNavController,mainViewModel = mainViewModel)
+                ShopScreen(
+                    navController =  appNavController,
+                    mainViewModel = mainViewModel,
+                    selectedCountryCode = profileViewModel.state.value.countryCode ,
+                )
             }
 
             composable(route = NavigationScreen.Bag.route) {

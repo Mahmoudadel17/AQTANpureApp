@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,14 +40,22 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ProductDetailsScreen(
     product: Product,
+    selectedCountryCode:Int,
     navController: NavHostController,
 ) {
 //    DetailsImageCard
     val pagerState = rememberPagerState()
+
+    val context = LocalContext.current
+    // Now can access resources using the context
+    val resources = context.resources
+    val isArabicLang = resources.configuration.locales[0].language == "ar"
+
+    val selectedPrice = product.prices.find { it.countryId == selectedCountryCode } ?: product.prices.firstOrNull()
 
 
     Column (
@@ -123,22 +132,28 @@ fun ProductDetailsScreen(
 
                     ){
                         TextLabel(
-                            text = product.enProductName,
+                            text = if (isArabicLang) product.arProductName else product.enProductName,
                             modifier = Modifier.weight(0.8f),
                             textFont = 22
                         )
                         Spacer(modifier = Modifier.width(5.dp))
-                        TextLabel(
-                            text = product.price.toString(),
-                            modifier = Modifier.weight(0.2f),
-                            textFont = 26,
-                            textFontWight = FontWeight.Bold,
-                            textColor = RedComponentColor
-                        )
+                        selectedPrice?.let {
+                            if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
+                            else "${it.price}  ${it.enCurrencyName}"
+                        }?.let {
+                            TextLabel(
+                                text = it,
+                                modifier = Modifier.weight(0.2f),
+                                textFont = 26,
+                                textFontWight = FontWeight.Bold,
+                                textColor = RedComponentColor
+                            )
+                        }
+
                     }
                     Spacer(modifier = Modifier.height(32.dp))
                     TextTitle(
-                        text = product.arDescription,
+                        text = if (isArabicLang) product.arDescription else product.enDescription,
                         textFont = 22,
                         maxLines = 500,
 

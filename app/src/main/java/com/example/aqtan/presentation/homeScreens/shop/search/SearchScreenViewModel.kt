@@ -4,6 +4,7 @@ package com.example.aqtan.presentation.homeScreens.shop.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.aqtan.data.remote.dto.Product
+import com.example.aqtan.domain.repository.ApiServicesRepository
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -13,8 +14,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchScreenViewModel @Inject constructor()
-    :ViewModel() {
+class SearchScreenViewModel @Inject constructor(
+  private val repo:ApiServicesRepository
+) :ViewModel() {
 
     private val _searchedItems  = MutableStateFlow(emptyList<Product>())
     val searchedItems : StateFlow<List<Product>> = _searchedItems
@@ -35,10 +37,9 @@ class SearchScreenViewModel @Inject constructor()
 
     private fun search(newQuery:String){
         viewModelScope.launch(Dispatchers.IO){
-
-//            searchUseCase.getSearchedItem(newQuery).collect{
-//                _searchedItems.value = it
-//            }
+            repo.searchForProduct(newQuery).collect{
+                _searchedItems.value = it
+            }
         }
     }
 

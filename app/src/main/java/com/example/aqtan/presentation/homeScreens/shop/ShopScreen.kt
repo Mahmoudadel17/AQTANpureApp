@@ -50,8 +50,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun ShopScreen(
     navController: NavHostController,
-    mainViewModel: MainViewModel
-    ){
+    mainViewModel: MainViewModel,
+    selectedCountryCode:Int
+){
 
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -97,6 +98,7 @@ fun ShopScreen(
                         // Show MoviesGridList() when shimmerVisible is false or list not empty
                         ProductsGridList(
                             products = products,
+                            selectedCountryCode = selectedCountryCode ,
                             navController = navController
                         )
 
@@ -105,6 +107,7 @@ fun ShopScreen(
                         // Show MoviesGridList() when shimmerVisible is false or list not empty
                         ProductsGridList(
                             products = filteredProducts,
+                            selectedCountryCode = selectedCountryCode ,
                             navController = navController
                         )
 

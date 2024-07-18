@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -54,12 +55,21 @@ import com.example.aqtan.ui.theme.brush2
 @Composable
 fun ProductCardView(
     product: Product,
+    selectedCountryCode:Int,
     modifier: Modifier = Modifier,
     cardHeight:Int = 200,
     alpha: Float,
     scale: Float,
     onProductClick: () -> Unit
     ) {
+    val context = LocalContext.current
+    // Now can access resources using the context
+    val resources = context.resources
+    val isArabicLang = resources.configuration.locales[0].language == "ar"
+
+
+    val selectedPrice = product.prices.find { it.countryId == selectedCountryCode } ?: product.prices.firstOrNull()
+
     Column (
         modifier = Modifier
             .padding(6.dp)
@@ -96,7 +106,7 @@ fun ProductCardView(
                             .align(Alignment.TopStart)
                     ){
                         TextWithBackgroundColorAsCard(
-                            text = "-${product.saleNumber}%",
+                            text = "-${product.salePercentage}%",
                             modifier = Modifier,
                             textColor = Color.White,
                             textFont = 14,
@@ -131,32 +141,50 @@ fun ProductCardView(
                     .padding(start = 6.dp)
                 ,
             ) {
-                TextLabel(
-                    text = product.oldPrice.toString(),
-                    textFont = 14,
-                    textColor = MaterialTheme.colorScheme.secondary,
-                    textDecoration = TextDecoration.LineThrough,
-                    textFontWight = FontWeight.Bold
-                )
+                selectedPrice?.let {
+                    if (isArabicLang)"${applyDiscount(it.price ,product.salePercentage)}  ${it.arCurrencyName}"
+                    else "${applyDiscount(it.price ,product.salePercentage)}  ${it.enCurrencyName}"
+                }?.let {
+                    TextLabel(
+                        text = it,
+                        textFont = 14,
+                        textColor = MaterialTheme.colorScheme.secondary,
+                        textDecoration = TextDecoration.LineThrough,
+                        textFontWight = FontWeight.Bold
+                    )
+                }
+
                 Spacer(modifier = Modifier.width(2.dp))
+                selectedPrice?.let {
+                    if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
+                    else "${it.price}  ${it.enCurrencyName}"
+                }?.let {
+                    TextLabel(
+                        text = it,
+                        textFont = 14,
+                        textColor = RedComponentColor3,
+                        textFontWight = FontWeight.Bold
+                    )
+                }
+
+            }
+        }
+        else{
+            selectedPrice?.let {
+                if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
+                else "${it.price}  ${it.enCurrencyName}"
+            }?.let {
                 TextLabel(
-                    text = product.price.toString(),
+                    text = it,
                     textFont = 14,
+                    modifier = Modifier
+                        .padding(start = 6.dp)
+                    ,
                     textColor = RedComponentColor3,
                     textFontWight = FontWeight.Bold
                 )
             }
-        }
-        else{
-            TextLabel(
-                text = product.price.toString(),
-                textFont = 14,
-                modifier = Modifier
-                    .padding(start = 6.dp)
-                ,
-                textColor = RedComponentColor3,
-                textFontWight = FontWeight.Bold
-            )
+
         }
     }
 
@@ -168,6 +196,7 @@ fun ProductCardView(
 @Composable
 fun ProductsGridList(
     products: List<Product>,
+    selectedCountryCode:Int,
     navController: NavHostController
 ) {
 
@@ -186,6 +215,8 @@ fun ProductsGridList(
 
             ProductCardView(
                 product = product,
+                selectedCountryCode = selectedCountryCode,
+
                 alpha = alpha,
                 scale = scale
             ) {
@@ -272,4 +303,10 @@ fun scaleAndAlpha(
         }
     }
     return alpha to scale
+}
+
+
+
+fun applyDiscount(price: Double, discountPercentage: Int): Double {
+    return price - (price * (discountPercentage / 100.0))
 }

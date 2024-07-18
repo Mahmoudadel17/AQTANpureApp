@@ -21,7 +21,8 @@ import com.example.aqtan.presentation.components.TextLabel
 @Composable
 fun AllProductsScreen(
     navController:NavHostController,
-    allProducts: HomeLists
+    allProducts: HomeLists,
+    selectedCountryCode:Int
 ) {
     Column {
         Row(
@@ -44,6 +45,7 @@ fun AllProductsScreen(
         Spacer(modifier = Modifier.height(6.dp))
         ProductsGridList(
             products = allProducts.productList,
+            selectedCountryCode = selectedCountryCode,
             navController = navController
         )
     }

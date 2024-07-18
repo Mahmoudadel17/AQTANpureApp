@@ -117,7 +117,7 @@ fun BagCard(
     val resources = context.resources
     val isArabicLang = resources.configuration.locales[0].language == "ar"
 
-    val selectedPrice = product.prices.find { it.countryId == selectedCountryCode }
+    val selectedPrice = product.prices.find { it.countryId == selectedCountryCode } ?: product.prices.firstOrNull()
 
 
     Card(
@@ -152,7 +152,7 @@ fun BagCard(
             ){
                 Row ( modifier = Modifier.fillMaxWidth()){
                     TextTitle(
-                        text =  product.enProductName.split(" ").take(3).joinToString(" "),
+                        text =  (if (isArabicLang) product.arProductName else product.enProductName).split(" ").take(3).joinToString(" "),
                         modifier = Modifier.padding(top = 10.dp),
                         textFontWight = FontWeight.Bold,
                         textColor = MaterialTheme.colorScheme.primary
