@@ -79,14 +79,32 @@ class ProfileScreenViewModel @Inject constructor(
 
 
 
-    fun onShowBottomSheet(){
+    fun onShowLanguageBottomSheet(){
         _state = _state.copy(
-            isBottomSheetShow = true
+            isLanguageBottomSheetShow = true
         )
     }
-    fun onDismissRequest(){
+    fun onDismissLanguageRequest(){
         _state = _state.copy(
-            isBottomSheetShow = false
+            isLanguageBottomSheetShow = false
+        )
+    }
+
+
+    fun onShowCountryBottomSheet(){
+        _state = _state.copy(
+            isCountryBottomSheetShow = true
+        )
+    }
+    fun onDismissCountryRequest(){
+        _state = _state.copy(
+            isCountryBottomSheetShow = false
+        )
+    }
+
+    fun onSelectCountry(code:Int){
+        _state = _state.copy(
+            countryCode = code
         )
     }
 

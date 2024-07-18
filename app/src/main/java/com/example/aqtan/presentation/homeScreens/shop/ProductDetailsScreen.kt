@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.aqtan.R
+import com.example.aqtan.data.remote.dto.Product
 import com.example.aqtan.presentation.components.BackIcon
 import com.example.aqtan.presentation.components.ButtonClickOn
-import com.example.aqtan.presentation.components.Product
 import com.example.aqtan.presentation.components.TextLabel
 import com.example.aqtan.presentation.components.TextTitle
 import com.example.aqtan.ui.theme.RedComponentColor
@@ -123,7 +123,7 @@ fun ProductDetailsScreen(
 
                     ){
                         TextLabel(
-                            text = product.productName,
+                            text = product.enProductName,
                             modifier = Modifier.weight(0.8f),
                             textFont = 22
                         )
@@ -138,7 +138,7 @@ fun ProductDetailsScreen(
                     }
                     Spacer(modifier = Modifier.height(32.dp))
                     TextTitle(
-                        text = product.description,
+                        text = product.arDescription,
                         textFont = 22,
                         maxLines = 500,
 

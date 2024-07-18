@@ -17,7 +17,9 @@ val BackgroundLight = Color(0xFFDCDEDF)
 
 // components
 val ComponentBackgroundDark = Color(0xFF002B49)
+val ComponentBackgroundDark2 = Color(0xFF003E69)
 val ComponentBackgroundLight = Color(0xFFF7F9FA)
+val ComponentBackgroundLight2 = Color(0xFFD9DBDB)
 
 val RedComponentColor = Color(0xFFcb1027)
 val RedComponentColor3 = Color(0xFF7f0a21)

@@ -1,6 +1,7 @@
 package com.example.aqtan.presentation.homeScreens.profile
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EditLocation
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.outlined.ContactPage
 import androidx.compose.material.icons.outlined.ModeNight
@@ -11,6 +12,11 @@ sealed class ProfileItem(
     val imageVector: ImageVector,
     val color:Long
 ) {
+
+    data object Country : ProfileItem(
+        imageVector = Icons.Default.EditLocation,
+        color = 0xFF03A9F4
+    )
     data object Language : ProfileItem(
         imageVector = Icons.Default.Language,
         color = 0xFF942BB9

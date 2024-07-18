@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.aqtan.R
 import com.example.aqtan.ui.theme.ComponentBackgroundDark
+import com.example.aqtan.ui.theme.ComponentBackgroundDark2
 import com.example.aqtan.ui.theme.RedComponentColor
 import com.example.aqtan.ui.theme.brush2
 
@@ -300,9 +301,9 @@ fun AnimatedTextWithTileModes(text:String,textFont:Int) {
                 val heightOffset = size.height * animatedOffset
                 return LinearGradientShader(
                     colors = listOf(
-                        ComponentBackgroundDark.copy(alpha = 0.6f),
+                        ComponentBackgroundDark2.copy(alpha = 0.6f),
                         RedComponentColor.copy(alpha = 0.2f),
-                        ComponentBackgroundDark.copy(alpha = 0.6f),
+                        ComponentBackgroundDark2.copy(alpha = 0.6f),
 
                         ),
                     from = Offset(widthOffset, heightOffset),

@@ -2,7 +2,6 @@ package com.example.aqtan.presentation.homeScreens.profile
 
 import android.content.Context
 import android.content.Intent
-import kotlin.random.Random
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,19 +17,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.HighlightOff
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +41,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.aqtan.R
+import com.example.aqtan.data.countries
+import com.example.aqtan.data.remote.dto.Country
 import com.example.aqtan.presentation.components.CircleIconBackground
+import com.example.aqtan.presentation.components.CountryImage
 import com.example.aqtan.presentation.components.ImageButtonClick
 import com.example.aqtan.presentation.components.TextLabel
 import com.example.aqtan.ui.theme.RedComponentColor
@@ -92,10 +95,17 @@ fun ProfileScreen(profileViewModel: ProfileScreenViewModel) {
                 textColor = MaterialTheme.colorScheme.secondary
             )
             BodyItem(
+                item = ProfileItem.Country,
+                title = stringResource(R.string.country),
+                iconColor = ProfileItem.Country.color,
+                onRowClick = {profileViewModel.onShowCountryBottomSheet()}
+            )
+
+            BodyItem(
                 item = ProfileItem.Language,
                 title = stringResource(R.string.language),
                 iconColor = ProfileItem.Language.color,
-                onRowClick = {profileViewModel.onShowBottomSheet()}
+                onRowClick = {profileViewModel.onShowLanguageBottomSheet()}
             )
 
             BodyItem(
@@ -138,14 +148,35 @@ fun ProfileScreen(profileViewModel: ProfileScreenViewModel) {
         item{
 
             AnimatedVisibility(
-                visible = state.isBottomSheetShow,
+                visible = state.isLanguageBottomSheetShow,
             ) {
-                LanguageBottomSheet(
-                    isArabic = state.isArabic,
-                    onDismissRequest = { profileViewModel.onDismissRequest() },
-                    onSelectLanguage = {selectionLocale->profileViewModel.onSelectLanguage(localeOptions[selectionLocale]!!,resources)}
+                BottomSheet(
+                    content = {
+                        LanguageBottomSheetContent(
+                            isArabic = state.isArabic,
+                            onDismissRequest = { profileViewModel.onDismissLanguageRequest() },
+                            onSelectLanguage = {selectionLocale->profileViewModel.onSelectLanguage(localeOptions[selectionLocale]!!,resources)}
+                        )
+                    },
+                    onDismissRequest = { profileViewModel.onDismissLanguageRequest() },
 
                 )
+            }
+
+            AnimatedVisibility(
+                visible = state.isCountryBottomSheetShow,
+            ) {
+                BottomSheet(
+                    content = {
+                        CountryBottomSheetContent(
+                            countryCode = state.countryCode,
+                            onDismissRequest = { profileViewModel.onDismissCountryRequest() },
+                            onSelectCountry = {selectionCountry->profileViewModel.onSelectCountry(selectionCountry)}
+                        )
+                    },
+                    onDismissRequest = { profileViewModel.onDismissCountryRequest() },
+
+                    )
             }
         }
 
@@ -185,13 +216,21 @@ fun BodyItem(
             textFontWight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.weight(1f))
-        if (title != stringResource(R.string.dark_mode)){
+        if (title != stringResource(R.string.dark_mode) && title != stringResource(R.string.country)){
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = "",
                 tint = MaterialTheme.colorScheme.secondary
             )
-        }else{
+        }
+        else if (title == stringResource(R.string.country)){
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowDown,
+                contentDescription = "",
+                tint = MaterialTheme.colorScheme.secondary
+            )
+        }
+        else{
             Switch(
                 checked = isDark,
                 onCheckedChange = { onModeSwitch() }
@@ -204,7 +243,7 @@ fun BodyItem(
 
 @Composable
 fun LineWithText(stringId:Int) {
-    Divider(
+    HorizontalDivider(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 5.dp, bottom = 5.dp, start = 18.dp, end = 18.dp),
@@ -223,10 +262,9 @@ fun LineWithText(stringId:Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LanguageBottomSheet(
-    isArabic: Boolean,
+fun BottomSheet(
+    content: @Composable () -> Unit,
     onDismissRequest: () -> Unit,
-    onSelectLanguage:(String)->Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = { onDismissRequest() },
@@ -234,12 +272,7 @@ fun LanguageBottomSheet(
         containerColor = MaterialTheme.colorScheme.background,
 
         ) {
-        LanguageBottomSheetContent(
-            isArabic = isArabic,
-            onDismissRequest = { onDismissRequest() },
-            onSelectLanguage = {selectionLocale-> onSelectLanguage(selectionLocale)}
-        )
-
+        content()
     }
 }
 
@@ -267,7 +300,7 @@ fun LanguageBottomSheetContent(
                 tint = RedComponentColor
             )
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 10.dp, bottom = 30.dp),
@@ -278,7 +311,7 @@ fun LanguageBottomSheetContent(
                 onSelectLanguage(selectionLocale)
             }
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp, bottom = 20.dp),
@@ -287,6 +320,61 @@ fun LanguageBottomSheetContent(
         Row {
             LangCard(stringResource(id = R.string.ar), R.drawable.ar ,isArabic,{ onDismissRequest()}){selectionLocale->
                 onSelectLanguage(selectionLocale)
+            }
+        }
+
+    }
+}
+
+
+
+
+@Composable
+fun CountryBottomSheetContent(
+    countryCode:Int,
+    onDismissRequest: () -> Unit,
+    onSelectCountry: (Int) -> Unit,
+) {
+    Column (modifier = Modifier.padding(18.dp)){
+        Row {
+            TextLabel(
+                text = stringResource(R.string.change_country_location),
+                textFont = 26
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                imageVector = Icons.Outlined.HighlightOff,
+                modifier = Modifier
+                    .size(35.dp)
+                    .clickable {
+                        onDismissRequest()
+                    },
+                contentDescription = "",
+                tint = RedComponentColor
+            )
+        }
+        HorizontalDivider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp, bottom = 30.dp),
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        LazyColumn {
+            itemsIndexed(countries){index,country->
+                Row{
+                    CountryCard(country = country, isSelected = countryCode == country.id, onDismissRequest = { onDismissRequest() }) {
+                        onSelectCountry(it)
+                    }
+                    if (index != countries.size-1) {
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 20.dp, bottom = 20.dp),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             }
         }
 
@@ -320,6 +408,48 @@ fun LangCard(
         ) {}
         TextLabel(
             text = langName,
+            modifier = Modifier.padding(start = 5.dp),
+            textFont = 18,
+            textFontWight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        AnimatedVisibility(visible = isSelected) {
+            Icon(
+                imageVector = Icons.Filled.CheckCircle,
+                contentDescription = "",
+                tint = RedComponentColor
+            )
+        }
+    }
+}
+
+
+
+
+@Composable
+fun CountryCard(
+    country: Country,
+    isSelected:Boolean,
+    onDismissRequest: () -> Unit,
+    onSelectCountry: (Int) -> Unit,
+) {
+    Row (
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 15.dp)
+            .clickable {
+                onDismissRequest()
+                onSelectCountry(country.id)
+            }
+    ){
+        CountryImage(
+            link = country.countryFlag,
+            modifier = Modifier.width(30.dp)
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        TextLabel(
+            text = country.enCountryName,
             modifier = Modifier.padding(start = 5.dp),
             textFont = 18,
             textFontWight = FontWeight.Bold

@@ -57,12 +57,12 @@ fun HomeScreen(
                 ) {
                     Column {
                         TextLabel(
-                            text = it.title,
+                            text = it.enTitle,
                             textFont = 40,
                             textFontWight = FontWeight.Bold
                         )
                         TextLabel(
-                            text = it.largeTitle,
+                            text = it.arLargeTitle,
                             textFont = 16,
                             textColor = MaterialTheme.colorScheme.secondary
                             )
@@ -72,9 +72,9 @@ fun HomeScreen(
                     TextLabel(
                         text = "View all",
                         textFont = 14,
-
                         modifier = Modifier.clickable {
-
+                            // view All products
+                            navController.navigate("${Screens.AllProducts.route}/${it.id}")
                         }
                     )
 

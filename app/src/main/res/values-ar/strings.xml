@@ -31,4 +31,7 @@
     <string name="rate_this_app">قيم هذا التطبيق</string>
     <string name="share_this_app">شارك هذا التطبيق</string>
     <string name="add_to_cart">ADD TO CART</string>
+    <string name="change_country_location">Change Country Location</string>
+    <string name="country">Country</string>
+    <string name="check_out">CHECK OUT</string>
 </resources>

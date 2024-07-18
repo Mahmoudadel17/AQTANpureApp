@@ -96,7 +96,7 @@ fun ProductCardView(
                             .align(Alignment.TopStart)
                     ){
                         TextWithBackgroundColorAsCard(
-                            text = "-${product.sealNumber}%",
+                            text = "-${product.saleNumber}%",
                             modifier = Modifier,
                             textColor = Color.White,
                             textFont = 14,
@@ -123,7 +123,7 @@ fun ProductCardView(
 
             }
         }
-        TextTitle(text = product.productName.split(" ").take(3).joinToString(" "))
+        TextTitle(text = product.enProductName.split(" ").take(3).joinToString(" "))
         if (product.isSale){
             Row(
                 Modifier

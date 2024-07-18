@@ -4,18 +4,20 @@ package com.example.aqtan.presentation.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.aqtan.data.list
+import com.example.aqtan.data.remote.dto.HomeLists
+import com.example.aqtan.data.remote.dto.Product
 import com.example.aqtan.presentation.MainScreen
-import com.example.aqtan.presentation.components.Product
 import com.example.aqtan.presentation.components.SuccessScreen
+import com.example.aqtan.presentation.homeScreens.bag.BagScreen
+import com.example.aqtan.presentation.homeScreens.home.AllProductsScreen
 import com.example.aqtan.presentation.homeScreens.home.HomeScreen
 import com.example.aqtan.presentation.homeScreens.profile.ProfileScreen
 import com.example.aqtan.presentation.homeScreens.profile.ProfileScreenViewModel
@@ -23,7 +25,6 @@ import com.example.aqtan.presentation.homeScreens.shop.ProductDetailsScreen
 import com.example.aqtan.presentation.homeScreens.shop.ShopScreen
 import com.example.aqtan.presentation.homeScreens.shop.search.SearchScreen
 import com.example.aqtan.presentation.introScreens.IntroScreen
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -59,6 +60,25 @@ fun AppNavigation(
                         navController = navController,
                     )
                 }
+            }
+            composable(
+                route = "${Screens.AllProducts.route}/{listId}",
+                arguments = listOf(
+                    navArgument("listId"){
+                        type = NavType.IntType
+                    }
+                    )
+                ) { it ->
+                val listId = it.arguments?.getInt("listId")
+
+                var newList:HomeLists? = null
+                listId?.let {listID->
+                    newList = list.find {currList-> currList.id == listID }
+                }
+                newList?.let {homeList->
+                    AllProductsScreen(navController = navController, allProducts = homeList)
+                }
+
             }
             composable(route = Screens.Search.route) {
                 SearchScreen(navController = navController)
@@ -97,7 +117,7 @@ fun BottomNavigation(
             }
 
             composable(route = NavigationScreen.Bag.route) {
-
+                BagScreen()
             }
             composable(route = NavigationScreen.Profile.route) {
 

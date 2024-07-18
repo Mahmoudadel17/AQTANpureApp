@@ -24,6 +24,7 @@ import com.loc.composeloginscreen.ui.theme.*
 private val DarkColorScheme = darkColorScheme(
     background = BackgroundDark,
     onBackground = ComponentBackgroundDark,
+    tertiary = ComponentBackgroundDark2,
     primary = TextDark,
     secondary = TextHintDark,
     onPrimary = RedComponentColor,
@@ -33,6 +34,7 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     background = BackgroundLight,
     onBackground = ComponentBackgroundLight,
+    tertiary = ComponentBackgroundLight2,
     primary = TextLight,
     secondary = TextHintLight,
     onPrimary = RedComponentColor,

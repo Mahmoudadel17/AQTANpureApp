@@ -3,7 +3,7 @@ package com.example.aqtan.presentation.homeScreens.shop.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.aqtan.presentation.components.Product
+import com.example.aqtan.data.remote.dto.Product
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

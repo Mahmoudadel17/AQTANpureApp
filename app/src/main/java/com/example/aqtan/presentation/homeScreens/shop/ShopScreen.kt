@@ -7,7 +7,6 @@ package com.example.aqtan.presentation.homeScreens.shop
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -90,22 +89,18 @@ fun ShopScreen(navController: NavHostController){
                     // check if current tab is all or filter.
                     if (tabItems[index].id==-1){
                         // Show MoviesGridList() when shimmerVisible is false or list not empty
-                        SharedTransitionLayout {
-                            ProductsGridList(
-                                products = products,
-                                navController = navController
-                            )
-                        }
+                        ProductsGridList(
+                            products = products,
+                            navController = navController
+                        )
 
                     }
                     else{
                         // Show MoviesGridList() when shimmerVisible is false or list not empty
-                        SharedTransitionLayout {
-                            ProductsGridList(
-                                products = products,
-                                navController = navController
-                            )
-                        }
+                        ProductsGridList(
+                            products = products,
+                            navController = navController
+                        )
 
                     }
 
@@ -144,7 +139,7 @@ fun ShopScreen(navController: NavHostController){
                     Tab(
                         text = {
                             Text(
-                                category.name,
+                                category.enName,
                                 style = TextStyle(
                                     color = TextDark,
                                     fontSize = 16.sp
