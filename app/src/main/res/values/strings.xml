@@ -33,4 +33,5 @@
     <string name="change_country_location">Change Country Location</string>
     <string name="country">Country</string>
     <string name="check_out">CHECK OUT</string>
+    <string name="my_bag">My Bag</string>
 </resources>

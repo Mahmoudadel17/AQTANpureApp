@@ -6,7 +6,6 @@ package com.example.aqtan.presentation.homeScreens.shop
 
 
 import androidx.compose.animation.Animatable
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -33,10 +33,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.aqtan.data.products
-import com.example.aqtan.data.tabItems
 import com.example.aqtan.presentation.components.ProductsGridList
 import com.example.aqtan.presentation.components.SearchAppBar
+import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.presentation.navigation.Screens
 import com.example.aqtan.ui.theme.RedComponentColor3
 import com.example.aqtan.ui.theme.TextDark
@@ -47,12 +46,19 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ShopScreen(navController: NavHostController){
+fun ShopScreen(
+    navController: NavHostController,
+    mainViewModel: MainViewModel
+    ){
 
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+
+    val tabItems = mainViewModel.tabList.collectAsState().value
+    val products = mainViewModel.productsList.collectAsState().value
+    val filteredProducts = mainViewModel.productsListFiltered.collectAsState().value
 
 
     Column (
@@ -98,7 +104,7 @@ fun ShopScreen(navController: NavHostController){
                     else{
                         // Show MoviesGridList() when shimmerVisible is false or list not empty
                         ProductsGridList(
-                            products = products,
+                            products = filteredProducts,
                             navController = navController
                         )
 

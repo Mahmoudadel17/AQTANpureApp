@@ -15,25 +15,29 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.aqtan.data.list
 import com.example.aqtan.presentation.components.AnimatedTextWithTileModes
 import com.example.aqtan.presentation.components.ProductCardView
 import com.example.aqtan.presentation.components.ScaleAndAlphaArgs
 import com.example.aqtan.presentation.components.TextLabel
 import com.example.aqtan.presentation.components.calculateDelayAndEasing
 import com.example.aqtan.presentation.components.scaleAndAlpha
+import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.presentation.navigation.Screens
 
 
 @Composable
 fun HomeScreen(
     navController: NavHostController,
+    mainViewModel: MainViewModel
     ) {
+    val homeLists = mainViewModel.homeLists.collectAsState().value
+
     LazyColumn (
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +53,7 @@ fun HomeScreen(
                 textFont = 70,
             )
 
-            list.forEach {
+            homeLists.forEach {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -81,7 +85,7 @@ fun HomeScreen(
                 }
                 val state = rememberLazyListState()
                 LazyRow {
-                    itemsIndexed(it.list){index,product->
+                    itemsIndexed(it.productList){index,product->
 
                         val (delay, easing) = state.calculateDelayAndEasing(index, 1)
                         val animation = tween<Float>(durationMillis = 500, delayMillis = delay, easing = easing)

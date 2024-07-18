@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,44 +32,54 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.aqtan.R
 import com.example.aqtan.data.remote.dto.Product
-import com.example.aqtan.data.selectedProducts
 import com.example.aqtan.presentation.components.AnimatedTextWithTileModes
 import com.example.aqtan.presentation.components.ButtonClickOn
 import com.example.aqtan.presentation.components.CircleIconBackground
 import com.example.aqtan.presentation.components.TextLabel
 import com.example.aqtan.presentation.components.TextTitle
 import com.example.aqtan.presentation.components.ViewImage
+import com.example.aqtan.presentation.homeScreens.MainViewModel
+import com.example.aqtan.presentation.navigation.Screens
 
 @Composable
-fun BagScreen() {
+fun BagScreen(
+    navController: NavHostController,
+    mainViewModel: MainViewModel,
+    selectedCountryCode:Int
+) {
+    val selectedProducts = mainViewModel.selectedListAddedToCart.collectAsState().value
+
     Column (
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp),
         verticalArrangement = Arrangement.Top
     ){
-        AnimatedTextWithTileModes(text = "My Bag", textFont = 50 )
+        AnimatedTextWithTileModes(text = stringResource(R.string.my_bag), textFont = 50 )
 
         LazyColumn (
             modifier = Modifier.weight(1f)
         ){
             items(selectedProducts){
-                BagCard(product = it, onMinusClick = { /*TODO*/ }, onAddClick = {}) {
-
-                }
+                BagCard(
+                    product = it,
+                    selectedCountryCode = selectedCountryCode,
+                    onMinusClick = {minusProduct-> mainViewModel.minusCountOfProduct(minusProduct) },
+                    onAddClick = {addProduct->mainViewModel.addCountOfProduct(addProduct)}
+                ) {deleteProduct-> mainViewModel.deleteToCart(deleteProduct) }
             }
-
 
         }
         Row (
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 10.dp)
         ){
-            TextLabel(text = "Total amount: ", textFont = 16)
+            TextLabel(text = "Order: ", textFont = 16)
             Spacer(modifier = Modifier.weight(1f))
-            TextLabel(text = "124", textFont = 22, textFontWight = FontWeight.Bold)
+            TextLabel(text = mainViewModel.getTotalOrderAmount(selectedCountryCode).toString(), textFont = 22, textFontWight = FontWeight.Bold)
         }
         Row(
             modifier = Modifier
@@ -82,7 +93,7 @@ fun BagScreen() {
                 paddingValue = 0,
                 buttonHeight = 45,
             ) {
-
+                navController.navigate(Screens.Checkout.route)
             }
 
 
@@ -96,14 +107,18 @@ fun BagScreen() {
 @Composable
 fun BagCard(
     product: Product,
-    onMinusClick:()->Unit,
-    onAddClick:()->Unit,
-    onDeleteClick:()->Unit,
+    selectedCountryCode:Int,
+    onMinusClick:(Product)->Unit,
+    onAddClick:(Product)->Unit,
+    onDeleteClick:(Product)->Unit,
 ) {
     val context = LocalContext.current
     // Now can access resources using the context
     val resources = context.resources
     val isArabicLang = resources.configuration.locales[0].language == "ar"
+
+    val selectedPrice = product.prices.find { it.countryId == selectedCountryCode }
+
 
     Card(
         modifier = Modifier
@@ -117,12 +132,13 @@ fun BagCard(
                 .background(MaterialTheme.colorScheme.onBackground)
 
         ){
+//            https://gratisography.com/wp-content/uploads/2024/01/gratisography-cyber-kitty-1170x780.jpg
             ViewImage(
-                image = "https://gratisography.com/wp-content/uploads/2024/01/gratisography-cyber-kitty-1170x780.jpg",
+                image = product.images[0]?:"",
                 modifier = Modifier
                     .weight(0.22f)
                     .height(110.dp),
-                contentDescription = "Avoid image"
+                contentDescription = "product image"
             )
 
             Spacer(modifier = Modifier.width(10.dp))
@@ -147,7 +163,7 @@ fun BagCard(
                         modifier = Modifier
                             .background(Color.Transparent, CircleShape)
                             .clickable {
-                                onDeleteClick()
+                                onDeleteClick(product)
                             }
                             .shadow(elevation = 24.dp)
                         ,
@@ -165,7 +181,7 @@ fun BagCard(
                         modifier = Modifier
                             .background(MaterialTheme.colorScheme.tertiary, CircleShape)
                             .clickable {
-                                onMinusClick()
+                                onMinusClick(product)
                             }
                             .shadow(elevation = 24.dp)
                         ,
@@ -186,7 +202,7 @@ fun BagCard(
                         modifier = Modifier
                             .background(MaterialTheme.colorScheme.tertiary, CircleShape)
                             .clickable {
-                                onAddClick()
+                                onAddClick(product)
                             }
                             .shadow(elevation = 24.dp)
                         ,
@@ -194,12 +210,17 @@ fun BagCard(
                         iconSize = 40
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    TextTitle(
-                        text =  product.price.toString(),
-                        modifier = Modifier.padding(top = 10.dp),
-                        textFontWight = FontWeight.Bold,
-                        textColor = MaterialTheme.colorScheme.primary
-                    )
+                    selectedPrice?.let {
+                        if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
+                        else "${it.price}  ${it.enCurrencyName}"
+                    }?.let {
+                        TextTitle(
+                            text = it,
+                            modifier = Modifier.padding(top = 10.dp),
+                            textFontWight = FontWeight.Bold,
+                            textColor = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
 
             }

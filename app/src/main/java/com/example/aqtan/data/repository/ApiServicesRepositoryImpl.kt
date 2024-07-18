@@ -27,4 +27,8 @@ class ApiServicesRepositoryImpl  @Inject constructor(
     override suspend fun getHomeProductsLists(): StateFlow<List<HomeLists>> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getProductsListOfCategory(id: Int): StateFlow<List<Product>> {
+        TODO("Not yet implemented")
+    }
 }

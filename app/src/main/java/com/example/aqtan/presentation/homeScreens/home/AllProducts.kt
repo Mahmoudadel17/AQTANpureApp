@@ -42,21 +42,8 @@ fun AllProductsScreen(
             }
         }
         Spacer(modifier = Modifier.height(6.dp))
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(12.dp),
-//        ) {
-//            SearchAppBar(
-//                text = "",
-//                onClicked = {
-//                    // go to search screen
-//                    navController.navigate(Screens.Search.route)
-//                },
-//            )
-//        }
         ProductsGridList(
-            products = allProducts.list,
+            products = allProducts.productList,
             navController = navController
         )
     }

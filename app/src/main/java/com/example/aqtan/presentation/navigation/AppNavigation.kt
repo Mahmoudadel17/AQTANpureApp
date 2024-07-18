@@ -5,17 +5,18 @@ package com.example.aqtan.presentation.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.aqtan.data.list
 import com.example.aqtan.data.remote.dto.HomeLists
 import com.example.aqtan.data.remote.dto.Product
 import com.example.aqtan.presentation.MainScreen
 import com.example.aqtan.presentation.components.SuccessScreen
+import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.presentation.homeScreens.bag.BagScreen
 import com.example.aqtan.presentation.homeScreens.home.AllProductsScreen
 import com.example.aqtan.presentation.homeScreens.home.HomeScreen
@@ -32,8 +33,10 @@ import com.example.aqtan.presentation.introScreens.IntroScreen
 fun AppNavigation(
     isIntro: Boolean,
     profileViewModel: ProfileScreenViewModel,
+    mainViewModel: MainViewModel,
 ) {
         val navController = rememberNavController()
+         val homeLists = mainViewModel.homeLists.collectAsState().value
 
         NavHost(
             navController = navController,
@@ -47,6 +50,7 @@ fun AppNavigation(
                 MainScreen(
                     appNavController = navController,
                     profileViewModel = profileViewModel,
+                    mainViewModel = mainViewModel,
                 )
             }
             composable(
@@ -73,7 +77,7 @@ fun AppNavigation(
 
                 var newList:HomeLists? = null
                 listId?.let {listID->
-                    newList = list.find {currList-> currList.id == listID }
+                    newList = homeLists.find {currList-> currList.id == listID }
                 }
                 newList?.let {homeList->
                     AllProductsScreen(navController = navController, allProducts = homeList)
@@ -104,26 +108,29 @@ fun BottomNavigation(
     bottomNavController: NavHostController,
     appNavController: NavHostController,
     profileViewModel: ProfileScreenViewModel,
+    mainViewModel: MainViewModel,
     ) {
         NavHost(
             navController = bottomNavController,
             startDestination = NavigationScreen.Home.route
         ) {
             composable(route = NavigationScreen.Home.route) {
-                HomeScreen(navController = appNavController)
+                HomeScreen(navController = appNavController,mainViewModel = mainViewModel)
             }
             composable(route = NavigationScreen.Shop.route) {
-                ShopScreen(appNavController)
+                ShopScreen(appNavController,mainViewModel = mainViewModel)
             }
 
             composable(route = NavigationScreen.Bag.route) {
-                BagScreen()
+                BagScreen(
+                    navController = appNavController,
+                    mainViewModel = mainViewModel,
+                    selectedCountryCode = profileViewModel.state.value.countryCode
+                    )
             }
             composable(route = NavigationScreen.Profile.route) {
-
                 ProfileScreen(
-                    profileViewModel = profileViewModel
-                )
+                    profileViewModel = profileViewModel)
             }
     }
 

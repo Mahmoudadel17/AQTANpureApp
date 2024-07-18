@@ -10,10 +10,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+
+val allCategory = Category(id = -1, enName = "All", arName = "الكل")
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -26,7 +29,7 @@ class MainViewModel @Inject constructor(
     private val _productList = MutableStateFlow(emptyList<Product>())
     val productsList: StateFlow<List<Product>> = _productList
 
-    // category list filter
+    // category list filter when user select another tab of all
     private val _productListFiltered = MutableStateFlow(emptyList<Product>())
     val productsListFiltered: StateFlow<List<Product>> = _productListFiltered
 
@@ -49,7 +52,8 @@ class MainViewModel @Inject constructor(
     private fun getCategoriesList(){
         viewModelScope.launch(Dispatchers.IO) {
             repo.getAllCategories().collect{
-                _tabList.value =  it
+                _tabList.value = listOf(allCategory)
+                _tabList.value += it
             }
         }
     }
@@ -73,12 +77,51 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun addToCart(product: Product){
-        _selectedListAddedToCart.toM
+    private fun getProductsCategoryList(id : Int){
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.getProductsListOfCategory(id).collect{
+                _productListFiltered.value = it
+
+            }
+        }
     }
 
+    fun onSelectingTab(category: Category) {
+        getProductsCategoryList(category.id)
+    }
 
+    fun addToCart(product: Product){
+        val currentList = _selectedListAddedToCart.value.toMutableList()
+        currentList.add(product)
+        _selectedListAddedToCart.value = currentList.toList()
+    }
 
+    fun deleteToCart(product: Product){
+        val currentList = _selectedListAddedToCart.value.toMutableList()
+        currentList.remove(product)
+        _selectedListAddedToCart.value = currentList.toList()
+    }
+
+    fun addCountOfProduct(product: Product){
+        product.count += 1
+    }
+
+    fun minusCountOfProduct(product: Product){
+        if (product.count>1){
+            product.count -= 1
+        }
+    }
+
+    fun getTotalOrderAmount(selectedCountryCode:Int):Double{
+        var totalAmount = 0.0
+        _selectedListAddedToCart.value.forEach {product->
+            val selectedPrice = product.prices.find { it.countryId == selectedCountryCode }
+            selectedPrice?.let { price->
+                totalAmount+=price.price
+            }
+        }
+        return totalAmount
+    }
 
 
 

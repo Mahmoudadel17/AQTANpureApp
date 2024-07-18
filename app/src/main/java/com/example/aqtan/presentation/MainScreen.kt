@@ -37,6 +37,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.aqtan.R
+import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.presentation.homeScreens.profile.ProfileScreenViewModel
 import com.example.aqtan.presentation.navigation.BottomNavigation
 import com.example.aqtan.presentation.navigation.NavigationScreen
@@ -48,6 +49,7 @@ import com.example.aqtan.ui.theme.RedComponentColor
 fun MainScreen(
     appNavController: NavHostController,
     profileViewModel: ProfileScreenViewModel,
+    mainViewModel: MainViewModel,
 ) {
     // use it when user need to exit app to show toast to click again to exit.
     var doubleBackToExitPressedOnce = false
@@ -137,6 +139,7 @@ fun MainScreen(
                 bottomNavController = navController,
                 appNavController = appNavController,
                 profileViewModel = profileViewModel,
+                mainViewModel = mainViewModel,
                 )
         }
 

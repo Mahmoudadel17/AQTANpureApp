@@ -15,4 +15,5 @@ interface ApiServicesRepository {
     suspend fun getAllCountries():StateFlow<List<Country>>
 
     suspend fun getHomeProductsLists():StateFlow<List<HomeLists>>
+    suspend fun getProductsListOfCategory(id: Int):StateFlow<List<Product>>
 }

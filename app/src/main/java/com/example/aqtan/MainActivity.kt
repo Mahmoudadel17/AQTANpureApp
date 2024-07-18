@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import com.example.aqtan.presentation.components.SplashScreen
+import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.presentation.homeScreens.profile.ProfileScreenViewModel
 import com.example.aqtan.presentation.navigation.AppNavigation
 import com.example.aqtan.ui.theme.AQTANTheme
@@ -29,6 +30,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val mainViewModel by viewModels<MainViewModel>()
     private val profileViewModel by viewModels<ProfileScreenViewModel>()
 
 
@@ -76,6 +78,7 @@ class MainActivity : ComponentActivity() {
                             AppNavigation(
                                 isIntro = isIntroScreenShow,
                                 profileViewModel = profileViewModel,
+                                mainViewModel = mainViewModel,
                             )
                         }
                         // make delay for 4 second then start App Navigation

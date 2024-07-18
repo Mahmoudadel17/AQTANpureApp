@@ -16,7 +16,7 @@ data class Product(
     val isSale:Boolean,
     val isNew:Boolean,
 
-    val count:Int = 1,
+    var count:Int = 1,
 
     ): Parcelable
 
