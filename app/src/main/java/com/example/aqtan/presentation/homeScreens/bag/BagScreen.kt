@@ -1,5 +1,6 @@
 package com.example.aqtan.presentation.homeScreens.bag
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -90,13 +91,15 @@ fun BagScreen(
             }
         }
 
-        Row (
-            modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 10.dp)
-        ){
-            TextLabel(text = "Order: ", textFont = 16)
-            Spacer(modifier = Modifier.weight(1f))
-            TextLabel(text = state.totalAmount.toString(), textFont = 22, textFontWight = FontWeight.Bold)
+        AnimatedVisibility(visible = selectedProducts.isNotEmpty()) {
+            Row (
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 10.dp)
+            ){
+                TextLabel(text = "Order: ", textFont = 16)
+                Spacer(modifier = Modifier.weight(1f))
+                TextLabel(text = state.totalAmount.toString(), textFont = 22, textFontWight = FontWeight.Bold)
+            }
         }
         Row(
             modifier = Modifier
