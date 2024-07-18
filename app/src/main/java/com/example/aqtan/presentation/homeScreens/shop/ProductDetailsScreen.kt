@@ -69,10 +69,20 @@ fun ProductDetailsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 6.dp, top = 6.dp)
+                .padding(start = 6.dp, top = 6.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             BackIcon {
                 navController.popBackStack()
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                TextLabel(
+                    text = if (isArabicLang) product.arProductName else product.enProductName,
+                    textFont = 22
+                )
             }
 
         }
@@ -129,30 +139,16 @@ fun ProductDetailsScreen(
                     modifier = Modifier
                         .padding(12.dp)
                 ) {
-
-                    Row (
-                        verticalAlignment = Alignment.CenterVertically
-
-                    ){
+                    selectedPrice?.let {
+                        if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
+                        else "${it.price}  ${it.enCurrencyName}"
+                    }?.let {
                         TextLabel(
-                            text = if (isArabicLang) product.arProductName else product.enProductName,
-                            modifier = Modifier.weight(0.8f),
-                            textFont = 22
+                            text = it,
+                            textFont = 26,
+                            textFontWight = FontWeight.Bold,
+                            textColor = RedComponentColor
                         )
-                        Spacer(modifier = Modifier.width(5.dp))
-                        selectedPrice?.let {
-                            if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
-                            else "${it.price}  ${it.enCurrencyName}"
-                        }?.let {
-                            TextLabel(
-                                text = it,
-                                modifier = Modifier.weight(0.2f),
-                                textFont = 26,
-                                textFontWight = FontWeight.Bold,
-                                textColor = RedComponentColor
-                            )
-                        }
-
                     }
                     Spacer(modifier = Modifier.height(32.dp))
                     TextTitle(

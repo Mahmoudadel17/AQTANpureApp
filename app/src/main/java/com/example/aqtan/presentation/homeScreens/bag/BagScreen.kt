@@ -37,12 +37,14 @@ import com.example.aqtan.data.remote.dto.Product
 import com.example.aqtan.presentation.components.AnimatedTextWithTileModes
 import com.example.aqtan.presentation.components.ButtonClickOn
 import com.example.aqtan.presentation.components.CircleIconBackground
+import com.example.aqtan.presentation.components.LottieAnimationShow
 import com.example.aqtan.presentation.components.TextLabel
 import com.example.aqtan.presentation.components.TextTitle
 import com.example.aqtan.presentation.components.ViewImage
 import com.example.aqtan.presentation.components.applyDiscount
 import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.presentation.navigation.Screens
+import com.example.aqtan.ui.theme.dimens
 
 @Composable
 fun BagScreen(
@@ -61,19 +63,33 @@ fun BagScreen(
     ){
         AnimatedTextWithTileModes(text = stringResource(R.string.my_bag), textFont = 50 )
 
-        LazyColumn (
-            modifier = Modifier.weight(1f)
-        ){
-            items(selectedProducts){
-                BagCard(
-                    product = it,
-                    selectedCountryCode = selectedCountryCode,
-                    onMinusClick = { minusProduct-> mainViewModel.minusCountOfProduct(minusProduct,selectedCountryCode) },
-                    onAddClick = {addProduct->mainViewModel.addCountOfProduct(addProduct,selectedCountryCode)}
-                ) {deleteProduct-> mainViewModel.deleteFromCart(deleteProduct,selectedCountryCode) }
-            }
+        if (selectedProducts.isNotEmpty()){
+            LazyColumn (
+                modifier = Modifier.weight(1f)
+            ){
+                items(selectedProducts){
+                    BagCard(
+                        product = it,
+                        selectedCountryCode = selectedCountryCode,
+                        onMinusClick = { minusProduct-> mainViewModel.minusCountOfProduct(minusProduct,selectedCountryCode) },
+                        onAddClick = {addProduct->mainViewModel.addCountOfProduct(addProduct,selectedCountryCode)}
+                    ) {deleteProduct-> mainViewModel.deleteFromCart(deleteProduct,selectedCountryCode) }
+                }
 
+            }
+        }else{
+            Column (
+                modifier = Modifier.weight(1f),
+                ){
+                LottieAnimationShow(
+                    animationResId = R.raw.empty_bag,
+                    size = MaterialTheme.dimens.animationSize,
+                    padding = 0,
+                    paddingBottom = 0
+                )
+            }
         }
+
         Row (
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 10.dp)

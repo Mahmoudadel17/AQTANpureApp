@@ -133,7 +133,7 @@ fun ProductCardView(
 
             }
         }
-        TextTitle(text = product.enProductName.split(" ").take(3).joinToString(" "))
+        TextTitle(text = (if (isArabicLang)product.arProductName else product.enProductName).split(" ").take(3).joinToString(" "))
         if (product.isSale){
             Row(
                 Modifier

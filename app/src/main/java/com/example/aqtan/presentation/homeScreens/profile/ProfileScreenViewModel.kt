@@ -46,7 +46,7 @@ class ProfileScreenViewModel @Inject constructor(
 
         val codeIsArabic =  pref.getSharedPreferences(Constants.LANGUAGE,"") == Constants.LANGUAGE_AR_CODE
         _state = _state.copy(
-            isDark = pref.getBooleanSharedPreferences(Constants.MODE, true),
+            isDark = pref.getBooleanSharedPreferences(Constants.MODE, false),
             isArabic  =  codeIsArabic ,
             isRtlDirection = codeIsArabic,
         )
