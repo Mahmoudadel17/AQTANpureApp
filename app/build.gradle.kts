@@ -97,6 +97,7 @@ dependencies {
     implementation (libs.androidx.hilt.navigation.compose)
 
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.accompanist.systemuicontroller)
 
@@ -108,6 +109,7 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.com.json)
+    implementation(libs.retrofit.coroutines.adapter)
 
 
     implementation(libs.lottie.compose)

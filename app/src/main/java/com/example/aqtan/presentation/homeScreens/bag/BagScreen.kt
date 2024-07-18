@@ -1,7 +1,6 @@
 package com.example.aqtan.presentation.homeScreens.bag
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +40,7 @@ import com.example.aqtan.presentation.components.CircleIconBackground
 import com.example.aqtan.presentation.components.TextLabel
 import com.example.aqtan.presentation.components.TextTitle
 import com.example.aqtan.presentation.components.ViewImage
+import com.example.aqtan.presentation.components.applyDiscount
 import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.presentation.navigation.Screens
 
@@ -51,6 +51,7 @@ fun BagScreen(
     selectedCountryCode:Int
 ) {
     val selectedProducts = mainViewModel.selectedListAddedToCart.collectAsState().value
+    val state = mainViewModel.state.value
 
     Column (
         modifier = Modifier
@@ -67,9 +68,9 @@ fun BagScreen(
                 BagCard(
                     product = it,
                     selectedCountryCode = selectedCountryCode,
-                    onMinusClick = {minusProduct-> mainViewModel.minusCountOfProduct(minusProduct) },
-                    onAddClick = {addProduct->mainViewModel.addCountOfProduct(addProduct)}
-                ) {deleteProduct-> mainViewModel.deleteToCart(deleteProduct) }
+                    onMinusClick = { minusProduct-> mainViewModel.minusCountOfProduct(minusProduct,selectedCountryCode) },
+                    onAddClick = {addProduct->mainViewModel.addCountOfProduct(addProduct,selectedCountryCode)}
+                ) {deleteProduct-> mainViewModel.deleteFromCart(deleteProduct,selectedCountryCode) }
             }
 
         }
@@ -79,7 +80,7 @@ fun BagScreen(
         ){
             TextLabel(text = "Order: ", textFont = 16)
             Spacer(modifier = Modifier.weight(1f))
-            TextLabel(text = mainViewModel.getTotalOrderAmount(selectedCountryCode).toString(), textFont = 22, textFontWight = FontWeight.Bold)
+            TextLabel(text = state.totalAmount.toString(), textFont = 22, textFontWight = FontWeight.Bold)
         }
         Row(
             modifier = Modifier
@@ -162,14 +163,13 @@ fun BagCard(
                         imageVector = Icons.Default.Delete,
                         modifier = Modifier
                             .background(Color.Transparent, CircleShape)
-                            .clickable {
-                                onDeleteClick(product)
-                            }
                             .shadow(elevation = 24.dp)
                         ,
                         iconColor = MaterialTheme.colorScheme.secondary,
                         iconSize = 40
-                    )
+                    ){
+                        onDeleteClick(product)
+                    }
                 }
 
 
@@ -180,14 +180,13 @@ fun BagCard(
                         imageVector = Icons.Default.Remove,
                         modifier = Modifier
                             .background(MaterialTheme.colorScheme.tertiary, CircleShape)
-                            .clickable {
-                                onMinusClick(product)
-                            }
                             .shadow(elevation = 24.dp)
                         ,
                         iconColor = MaterialTheme.colorScheme.secondary,
                         iconSize = 40
-                    )
+                    ){
+                        onMinusClick(product)
+                    }
                     Spacer(modifier = Modifier.width(5.dp))
                     TextTitle(
                         text =  product.count.toString(),
@@ -201,26 +200,40 @@ fun BagCard(
                         imageVector = Icons.Default.Add,
                         modifier = Modifier
                             .background(MaterialTheme.colorScheme.tertiary, CircleShape)
-                            .clickable {
-                                onAddClick(product)
-                            }
                             .shadow(elevation = 24.dp)
                         ,
                         iconColor = MaterialTheme.colorScheme.secondary,
                         iconSize = 40
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    selectedPrice?.let {
-                        if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
-                        else "${it.price}  ${it.enCurrencyName}"
-                    }?.let {
-                        TextTitle(
-                            text = it,
-                            modifier = Modifier.padding(top = 10.dp),
-                            textFontWight = FontWeight.Bold,
-                            textColor = MaterialTheme.colorScheme.primary
-                        )
+                    ){
+                        onAddClick(product)
                     }
+                    Spacer(modifier = Modifier.weight(1f))
+                    if (product.isSale){
+                        selectedPrice?.let {
+                            if (isArabicLang)"${applyDiscount(it.price,product.salePercentage)}  ${it.arCurrencyName}"
+                            else "${applyDiscount(it.price,product.salePercentage)}  ${it.enCurrencyName}"
+                        }?.let {
+                            TextTitle(
+                                text = it,
+                                modifier = Modifier.padding(top = 10.dp),
+                                textFontWight = FontWeight.Bold,
+                                textColor = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }else{
+                        selectedPrice?.let {
+                            if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
+                            else "${it.price}  ${it.enCurrencyName}"
+                        }?.let {
+                            TextTitle(
+                                text = it,
+                                modifier = Modifier.padding(top = 10.dp),
+                                textFontWight = FontWeight.Bold,
+                                textColor = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+
                 }
 
             }

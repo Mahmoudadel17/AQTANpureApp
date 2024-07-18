@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -34,9 +35,15 @@ import com.example.aqtan.presentation.navigation.Screens
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    selectedCountryCode:Int
     ) {
     val homeLists = mainViewModel.homeLists.collectAsState().value
+
+    val context = LocalContext.current
+    // Now can access resources using the context
+    val resources = context.resources
+    val isArabicLang = resources.configuration.locales[0].language == "ar"
 
     LazyColumn (
         modifier = Modifier
@@ -61,12 +68,12 @@ fun HomeScreen(
                 ) {
                     Column {
                         TextLabel(
-                            text = it.enTitle,
+                            text = if (isArabicLang) it.arTitle else it.enTitle,
                             textFont = 40,
                             textFontWight = FontWeight.Bold
                         )
                         TextLabel(
-                            text = it.arLargeTitle,
+                            text = if (isArabicLang) it.arLargeTitle else it.enLargeTitle,
                             textFont = 16,
                             textColor = MaterialTheme.colorScheme.secondary
                             )
@@ -91,7 +98,7 @@ fun HomeScreen(
                         val animation = tween<Float>(durationMillis = 500, delayMillis = delay, easing = easing)
                         val args = ScaleAndAlphaArgs(fromScale = 2f, toScale = 1f, fromAlpha = 0f, toAlpha = 1f)
                         val (scale, alpha) = scaleAndAlpha(args = args, animation = animation)
-                        ProductCardView(product = product, modifier = Modifier.width(230.dp), alpha = alpha, scale = scale) {
+                        ProductCardView(product = product,selectedCountryCode = selectedCountryCode, modifier = Modifier.width(230.dp), alpha = alpha, scale = scale) {
                             navController.currentBackStackEntry?.savedStateHandle?.set(
                                 "product",
                                 product

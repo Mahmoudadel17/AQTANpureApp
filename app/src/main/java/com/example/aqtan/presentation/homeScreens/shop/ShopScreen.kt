@@ -62,6 +62,7 @@ fun ShopScreen(
     val filteredProducts = mainViewModel.productsListFiltered.collectAsState().value
 
 
+
     Column (
         modifier = Modifier
             .fillMaxSize(),

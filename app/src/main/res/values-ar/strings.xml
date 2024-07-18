@@ -35,4 +35,6 @@
     <string name="country">Country</string>
     <string name="check_out">CHECK OUT</string>
     <string name="my_bag">My Bag</string>
+    <string name="product_added_successfully">Product Added Successfully</string>
+    <string name="product_already_in_list">Product already in list</string>
 </resources>

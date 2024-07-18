@@ -42,7 +42,7 @@ class ProfileScreenViewModel @Inject constructor(
 
 
     init {
-        getCategoriesList()
+        getCountriesList()
 
         val codeIsArabic =  pref.getSharedPreferences(Constants.LANGUAGE,"") == Constants.LANGUAGE_AR_CODE
         _state = _state.copy(
@@ -57,7 +57,7 @@ class ProfileScreenViewModel @Inject constructor(
 
 
 
-    private fun getCategoriesList(){
+    private fun getCountriesList(){
         viewModelScope.launch(Dispatchers.IO) {
             repo.getAllCountries().collect{
                 _countriesList.value =  it

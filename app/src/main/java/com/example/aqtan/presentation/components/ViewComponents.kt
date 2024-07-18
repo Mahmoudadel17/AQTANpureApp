@@ -142,8 +142,8 @@ fun ProductCardView(
                 ,
             ) {
                 selectedPrice?.let {
-                    if (isArabicLang)"${applyDiscount(it.price ,product.salePercentage)}  ${it.arCurrencyName}"
-                    else "${applyDiscount(it.price ,product.salePercentage)}  ${it.enCurrencyName}"
+                    if (isArabicLang)"${it.price }"
+                    else "${it.price } "
                 }?.let {
                     TextLabel(
                         text = it,
@@ -154,10 +154,10 @@ fun ProductCardView(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(2.dp))
+                Spacer(modifier = Modifier.width(4.dp))
                 selectedPrice?.let {
-                    if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
-                    else "${it.price}  ${it.enCurrencyName}"
+                    if (isArabicLang)"${applyDiscount(it.price ,product.salePercentage)}  ${it.arCurrencyName}"
+                    else "${applyDiscount(it.price ,product.salePercentage)}  ${it.enCurrencyName}"
                 }?.let {
                     TextLabel(
                         text = it,
@@ -171,7 +171,7 @@ fun ProductCardView(
         }
         else{
             selectedPrice?.let {
-                if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
+                if (isArabicLang)"${it.price}  ${it.arCurrencyName}   "
                 else "${it.price}  ${it.enCurrencyName}"
             }?.let {
                 TextLabel(

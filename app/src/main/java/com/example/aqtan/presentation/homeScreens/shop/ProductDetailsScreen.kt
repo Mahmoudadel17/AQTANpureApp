@@ -1,5 +1,6 @@
 package com.example.aqtan.presentation.homeScreens.shop
 
+import android.widget.Toast
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import com.example.aqtan.presentation.components.BackIcon
 import com.example.aqtan.presentation.components.ButtonClickOn
 import com.example.aqtan.presentation.components.TextLabel
 import com.example.aqtan.presentation.components.TextTitle
+import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.ui.theme.RedComponentColor
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -44,6 +46,7 @@ import com.google.accompanist.pager.rememberPagerState
 @Composable
 fun ProductDetailsScreen(
     product: Product,
+    mainViewModel: MainViewModel,
     selectedCountryCode:Int,
     navController: NavHostController,
 ) {
@@ -176,7 +179,8 @@ fun ProductDetailsScreen(
                 paddingValue = 0,
                 buttonHeight = 45,
             ) {
-
+                val  result= mainViewModel.addToCart(product,context,selectedCountryCode)
+                Toast.makeText(context, result,Toast.LENGTH_LONG).show()
             }
 
         }

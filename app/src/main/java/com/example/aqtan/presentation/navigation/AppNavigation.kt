@@ -61,6 +61,7 @@ fun AppNavigation(
                 product?.let {
                     ProductDetailsScreen(
                         product = it,
+                        mainViewModel = mainViewModel,
                         navController = navController,
                         selectedCountryCode = profileViewModel.state.value.countryCode
                     )
@@ -124,7 +125,12 @@ fun BottomNavigation(
             startDestination = NavigationScreen.Home.route
         ) {
             composable(route = NavigationScreen.Home.route) {
-                HomeScreen(navController = appNavController,mainViewModel = mainViewModel)
+                HomeScreen(
+                    navController = appNavController,
+                    mainViewModel = mainViewModel,
+                    selectedCountryCode = profileViewModel.state.value.countryCode ,
+
+                    )
             }
             composable(route = NavigationScreen.Shop.route) {
                 ShopScreen(

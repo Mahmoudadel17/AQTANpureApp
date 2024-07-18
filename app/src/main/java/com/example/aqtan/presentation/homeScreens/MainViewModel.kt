@@ -1,19 +1,26 @@
 package com.example.aqtan.presentation.homeScreens
 
+import android.content.Context
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aqtan.R
 import com.example.aqtan.data.remote.dto.Category
 import com.example.aqtan.data.remote.dto.HomeLists
 import com.example.aqtan.data.remote.dto.Product
 import com.example.aqtan.domain.repository.ApiServicesRepository
+import com.example.aqtan.presentation.components.applyDiscount
+import com.example.aqtan.presentation.homeScreens.bag.BagState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 
 val allCategory = Category(id = -1, enName = "All", arName = "الكل")
@@ -22,6 +29,19 @@ val allCategory = Category(id = -1, enName = "All", arName = "الكل")
 class MainViewModel @Inject constructor(
     private val repo:ApiServicesRepository
 ): ViewModel() {
+    private var _state by mutableStateOf(
+        BagState()
+    )
+
+    val state: State<BagState>
+        get() = derivedStateOf { _state }
+
+
+
+
+
+
+
     private val _tabList = MutableStateFlow(emptyList<Category>())
     val tabList: StateFlow<List<Category>> = _tabList
 
@@ -90,37 +110,77 @@ class MainViewModel @Inject constructor(
         getProductsCategoryList(category.id)
     }
 
-    fun addToCart(product: Product){
+    fun addToCart(product: Product,context: Context, selectedCountryCode: Int): String {
+        // Check if product already exists in _selectedListAddedToCart
+        if (_selectedListAddedToCart.value.any { it.id == product.id }) {
+            return context.getString(R.string.product_already_in_list)
+        }
+
+        // If not in list, add the product and update total amount
         val currentList = _selectedListAddedToCart.value.toMutableList()
+        product.count+=1
         currentList.add(product)
         _selectedListAddedToCart.value = currentList.toList()
+
+        getTotalOrderAmount(selectedCountryCode) // Update total order amount
+
+        return  context.getString(R.string.product_added_successfully)
     }
 
-    fun deleteToCart(product: Product){
+
+    fun deleteFromCart(product: Product, selectedCountryCode:Int){
         val currentList = _selectedListAddedToCart.value.toMutableList()
         currentList.remove(product)
         _selectedListAddedToCart.value = currentList.toList()
+        getTotalOrderAmount(selectedCountryCode)
+
+
     }
 
-    fun addCountOfProduct(product: Product){
-        product.count += 1
-    }
-
-    fun minusCountOfProduct(product: Product){
-        if (product.count>1){
-            product.count -= 1
+    fun addCountOfProduct(product: Product,selectedCountryCode:Int){
+        val updatedList = _selectedListAddedToCart.value.map { cd ->
+            if (cd.id == product.id) product.copy(
+                count  = product.count + 1
+            )
+            else cd
         }
+        _selectedListAddedToCart.value = updatedList.toMutableList()
+        getTotalOrderAmount(selectedCountryCode)
+
     }
 
-    fun getTotalOrderAmount(selectedCountryCode:Int):Double{
+    fun minusCountOfProduct(product: Product,selectedCountryCode:Int){
+        if (product.count>1){
+            val updatedList = _selectedListAddedToCart.value.map { cd ->
+                if (cd.id == product.id) product.copy(
+                    count  = product.count - 1
+                )
+                else cd
+            }
+            _selectedListAddedToCart.value = updatedList.toMutableList()
+
+        }
+        getTotalOrderAmount(selectedCountryCode)
+    }
+
+
+
+    private fun getTotalOrderAmount(selectedCountryCode:Int) {
         var totalAmount = 0.0
         _selectedListAddedToCart.value.forEach {product->
-            val selectedPrice = product.prices.find { it.countryId == selectedCountryCode }
+            val selectedPrice = product.prices.find { it.countryId == selectedCountryCode } ?: product.prices.firstOrNull()
             selectedPrice?.let { price->
-                totalAmount+=price.price
+                totalAmount += if (product.isSale){
+                    applyDiscount(price.price,product.salePercentage) * product.count
+                }else{
+                    price.price * product.count
+                }
+
             }
         }
-        return totalAmount
+        _state = _state.copy(
+            totalAmount = totalAmount
+        )
     }
 
 

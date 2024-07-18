@@ -6,6 +6,7 @@ import com.example.aqtan.data.remote.ApiServices
 import com.example.aqtan.data.repository.ApiServicesRepositoryImpl
 import com.example.aqtan.domain.SharedPreferences
 import com.example.aqtan.domain.repository.ApiServicesRepository
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,6 +27,7 @@ class AppModule {
         .Builder()
         .baseUrl(Constants.API_SERVICES_URL_BASE)
         .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 
 
