@@ -47,11 +47,12 @@ import com.example.aqtan.presentation.components.CircleIconBackground
 import com.example.aqtan.presentation.components.CountryImage
 import com.example.aqtan.presentation.components.ImageButtonClick
 import com.example.aqtan.presentation.components.TextLabel
+import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.ui.theme.RedComponentColor
 
 
 @Composable
-fun ProfileScreen(profileViewModel: ProfileScreenViewModel) {
+fun ProfileScreen(profileViewModel: ProfileScreenViewModel, mainViewModel: MainViewModel) {
     val state = profileViewModel.state.value
     val context = LocalContext.current
     // Now can access resources using the context
@@ -174,7 +175,10 @@ fun ProfileScreen(profileViewModel: ProfileScreenViewModel) {
                             countryCode = state.countryCode,
                             countriesList = countriesList,
                             onDismissRequest = { profileViewModel.onDismissCountryRequest() },
-                            onSelectCountry = {selectionCountry->profileViewModel.onSelectCountry(selectionCountry)}
+                            onSelectCountry = { selectionCountry->
+                                profileViewModel.onSelectCountry(selectionCountry)
+                                mainViewModel.getTotalOrderAmount(selectionCountry)
+                            }
                         )
                     },
                     onDismissRequest = { profileViewModel.onDismissCountryRequest() },

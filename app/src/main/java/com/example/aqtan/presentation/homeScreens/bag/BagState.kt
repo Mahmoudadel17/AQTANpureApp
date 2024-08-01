@@ -33,7 +33,9 @@ data class BagState(
     val expiryDate:String = "",
     val cvc:String = "",
 
-
+    val cash:Boolean = false,
+    val visa:Boolean = false,
+    val paymentMethodErrorMessage:String = "",
 
     val totalAmount:Double = 0.0
 )

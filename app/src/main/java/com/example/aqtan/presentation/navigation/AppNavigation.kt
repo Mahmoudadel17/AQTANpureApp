@@ -4,6 +4,7 @@ package com.example.aqtan.presentation.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
@@ -18,6 +19,8 @@ import com.example.aqtan.presentation.MainScreen
 import com.example.aqtan.presentation.components.SuccessScreen
 import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.presentation.homeScreens.bag.BagScreen
+import com.example.aqtan.presentation.homeScreens.bag.checkout.CheckOutScreen
+import com.example.aqtan.presentation.homeScreens.bag.checkout.PaymentScreen
 import com.example.aqtan.presentation.homeScreens.home.AllProductsScreen
 import com.example.aqtan.presentation.homeScreens.home.HomeScreen
 import com.example.aqtan.presentation.homeScreens.profile.ProfileScreen
@@ -28,6 +31,7 @@ import com.example.aqtan.presentation.homeScreens.shop.search.SearchScreen
 import com.example.aqtan.presentation.introScreens.IntroScreen
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun AppNavigation(
@@ -100,8 +104,13 @@ fun AppNavigation(
 
 
             composable(route = Screens.Checkout.route) {
+                CheckOutScreen(mainViewModel = mainViewModel, navController = navController)
             }
 
+            composable(route = Screens.Payment.route) {
+                PaymentScreen(mainViewModel = mainViewModel, navController = navController)
+
+            }
             composable(route = Screens.Success.route) {
                 SuccessScreen(navController)
 
@@ -149,7 +158,9 @@ fun BottomNavigation(
             }
             composable(route = NavigationScreen.Profile.route) {
                 ProfileScreen(
-                    profileViewModel = profileViewModel)
+                    profileViewModel = profileViewModel,
+                    mainViewModel = mainViewModel
+                    )
             }
     }
 

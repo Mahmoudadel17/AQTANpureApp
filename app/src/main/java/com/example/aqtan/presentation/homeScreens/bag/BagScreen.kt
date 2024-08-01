@@ -1,5 +1,6 @@
 package com.example.aqtan.presentation.homeScreens.bag
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -55,7 +56,7 @@ fun BagScreen(
 ) {
     val selectedProducts = mainViewModel.selectedListAddedToCart.collectAsState().value
     val state = mainViewModel.state.value
-
+    val context = LocalContext.current
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -113,7 +114,12 @@ fun BagScreen(
                 paddingValue = 0,
                 buttonHeight = 45,
             ) {
-                navController.navigate(Screens.Checkout.route)
+                if (selectedProducts.isEmpty()){
+                    Toast.makeText(context,"Your Bag Empty", Toast.LENGTH_LONG).show()
+                }else{
+                    navController.navigate(Screens.Checkout.route)
+
+                }
             }
 
 

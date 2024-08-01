@@ -4,6 +4,7 @@ package com.example.aqtan.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,10 +15,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -32,6 +36,32 @@ import com.example.aqtan.ui.theme.RedComponentColor
 import com.example.aqtan.ui.theme.animatedShimmerColor
 import com.example.aqtan.ui.theme.brushGray
 
+@Composable
+fun CheckboxWithName(
+    checkBoxText:String,
+    modifier: Modifier = Modifier,
+    checkedState:Boolean,
+    onToggleClick:(Boolean)->Unit
+) {
+
+    // Composable layout for the checkbox
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = checkedState,
+            onCheckedChange = { checked ->
+                // Update the checked state when checkbox state changes
+                onToggleClick(checked)
+            },
+            colors = CheckboxDefaults.colors(
+                checkmarkColor = MaterialTheme.colorScheme.background
+            ),
+        )
+        TextLabel(text = checkBoxText, textFont = 16)
+    }
+}
 
 @Composable
 fun ButtonClickOn(
@@ -40,7 +70,7 @@ fun ButtonClickOn(
     buttonHeight: Int = 60,
     textFont:Int = 18,
     paddingValue:Int ,
-    onButtonClick:() -> Unit ) {
+    onButtonClick:  () -> Unit ) {
     Button (
         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent,),
         enabled = true,
