@@ -368,20 +368,35 @@ class MainViewModel @Inject constructor(
         }
 
 
-        if (_state.visa && !_state.cash){
-            navController.navigate(Screens.Payment.route)
-        }else if (!_state.visa && _state.cash){
-            // call api to complete order
+        if (
+            _state.userName.isNotEmpty()&&
+            _state.email.isNotEmpty()&&
+            _state.phone.isNotEmpty()&&
+            _state.streetAddress.isNotEmpty()&&
+            _state.city.isNotEmpty()&&
+            _state.postalCode.isNotEmpty()&&
+            isValidEmail(_state.email)&&
+            isValidPhone(_state.phone)&&
+            isValidPostalCode(_state.postalCode)&&
+            _state.cash != _state.visa
+        ){
+            if (_state.visa && !_state.cash){
+                navController.navigate(Screens.Payment.route)
+            }else if (!_state.visa && _state.cash){
+                // call api to complete order
 
-        }else{
-            _state=_state.copy(
-                paymentMethodErrorMessage = context.getString(R.string.please_select_payment_method)
-            )
+            }else{
+                _state=_state.copy(
+                    paymentMethodErrorMessage = context.getString(R.string.please_select_payment_method)
+                )
+            }
         }
+
 
     }
 
     fun onCompleteOrder(navController: NavHostController,context: Context){
+        // make check and then call api
         navController.navigate(Screens.Success.route)
 
     }

@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -34,8 +35,10 @@ import com.example.aqtan.presentation.components.BackIcon
 import com.example.aqtan.presentation.components.ButtonClickOn
 import com.example.aqtan.presentation.components.TextLabel
 import com.example.aqtan.presentation.components.TextTitle
+import com.example.aqtan.presentation.components.applyDiscount
 import com.example.aqtan.presentation.homeScreens.MainViewModel
 import com.example.aqtan.ui.theme.RedComponentColor
+import com.example.aqtan.ui.theme.RedComponentColor3
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -138,16 +141,57 @@ fun ProductDetailsScreen(
                     modifier = Modifier
                         .padding(12.dp)
                 ) {
-                    selectedPrice?.let {
-                        if (isArabicLang)"${it.price}  ${it.arCurrencyName}"
-                        else "${it.price}  ${it.enCurrencyName}"
-                    }?.let {
-                        TextLabel(
-                            text = it,
-                            textFont = 26,
-                            textFontWight = FontWeight.Bold,
-                            textColor = RedComponentColor
-                        )
+                    if (product.isSale){
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(start = 6.dp)
+                            ,
+                        ) {
+                            selectedPrice?.let {
+                                if (isArabicLang)"${it.price }"
+                                else "${it.price } "
+                            }?.let {
+                                TextLabel(
+                                    text = it,
+                                    textFont = 14,
+                                    textColor = MaterialTheme.colorScheme.secondary,
+                                    textDecoration = TextDecoration.LineThrough,
+                                    textFontWight = FontWeight.Bold
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(4.dp))
+                            selectedPrice?.let {
+                                if (isArabicLang)"${applyDiscount(it.price ,product.salePercentage)}  ${it.arCurrencyName}"
+                                else "${applyDiscount(it.price ,product.salePercentage)}  ${it.enCurrencyName}"
+                            }?.let {
+                                TextLabel(
+                                    text = it,
+                                    textFont = 14,
+                                    textColor = RedComponentColor3,
+                                    textFontWight = FontWeight.Bold
+                                )
+                            }
+
+                        }
+                    }
+                    else{
+                        selectedPrice?.let {
+                            if (isArabicLang)"${it.price}  ${it.arCurrencyName}   "
+                            else "${it.price}  ${it.enCurrencyName}"
+                        }?.let {
+                            TextLabel(
+                                text = it,
+                                textFont = 14,
+                                modifier = Modifier
+                                    .padding(start = 6.dp)
+                                ,
+                                textColor = RedComponentColor3,
+                                textFontWight = FontWeight.Bold
+                            )
+                        }
+
                     }
                     Spacer(modifier = Modifier.height(32.dp))
                     TextTitle(
