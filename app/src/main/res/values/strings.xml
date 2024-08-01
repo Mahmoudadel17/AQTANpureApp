@@ -36,4 +36,5 @@
     <string name="my_bag">My Bag</string>
     <string name="product_added_successfully">Product Added Successfully</string>
     <string name="product_already_in_list">Product already in list</string>
+    <string name="complete_order">Complete Order</string>
 </resources>

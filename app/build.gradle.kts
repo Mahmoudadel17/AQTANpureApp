@@ -119,4 +119,7 @@ dependencies {
     implementation (libs.androidx.material3.window.size)
 
 
+    implementation(libs.androidx.constraintlayout.compose)
+
+
 }

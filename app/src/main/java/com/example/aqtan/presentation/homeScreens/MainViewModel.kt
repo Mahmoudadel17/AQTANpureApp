@@ -165,6 +165,34 @@ class MainViewModel @Inject constructor(
 
 
 
+
+    fun onChangeCardHolderName(newCardHolderName:String){
+        _state = _state.copy(
+            cardHolderName = newCardHolderName
+        )
+    }
+
+    fun onChangeCardHolderNumber(newCardHolderNumber:String){
+        _state = _state.copy(
+            cardHolderNumber = newCardHolderNumber
+        )
+    }
+
+
+    fun onChangeExpiryNumber(newExpiryNumber:String){
+        _state = _state.copy(
+            expiryDate = newExpiryNumber
+        )
+    }
+    fun onChangeCvc(newCvc:String){
+        _state = _state.copy(
+            cvc = newCvc
+        )
+    }
+
+
+
+
     private fun getTotalOrderAmount(selectedCountryCode:Int) {
         var totalAmount = 0.0
         _selectedListAddedToCart.value.forEach {product->
